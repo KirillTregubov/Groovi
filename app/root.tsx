@@ -1,16 +1,18 @@
-// import { LinksFunction } from '@remix-run/node'
+import { LinksFunction } from '@remix-run/node'
 import {
   Links,
   Meta,
   Outlet,
   Scripts,
-  ScrollRestoration
+  ScrollRestoration,
+  isRouteErrorResponse,
+  useRouteError
 } from '@remix-run/react'
-// import stylesheet from '~/tailwind.css?url'
+import stylesheet from '~/tailwind.css?url'
 
-// export const links: LinksFunction = () => [
-//   { rel: 'stylesheet', href: stylesheet }
-// ]
+export const links: LinksFunction = () => [
+  { rel: 'stylesheet', href: stylesheet }
+]
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -32,4 +34,32 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return <Outlet />
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError()
+  console.error(error)
+
+  if (isRouteErrorResponse(error)) {
+    if (error.status === 404) {
+      return (
+        <main>
+          <h1>Page Not Found</h1>
+        </main>
+      )
+    }
+
+    return (
+      <main>
+        <h1>{error.statusText}</h1>
+      </main>
+    )
+  }
+
+  return (
+    <main>
+      <h1>Oh no! An error occurred!</h1>
+      {error instanceof Error ? <pre>{error.message}</pre> : null}
+    </main>
+  )
 }
