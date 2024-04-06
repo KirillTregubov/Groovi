@@ -4,7 +4,7 @@ import {
   accessTokenCookie,
   codeVerifierCookie,
   refreshTokenCookie
-} from './.server'
+} from '../lib/server'
 
 const TOKEN_URL = 'https://accounts.spotify.com/api/token'
 

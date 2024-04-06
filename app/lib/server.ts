@@ -6,7 +6,7 @@ export const AUTH_REDIRECT_URL =
     : 'http://localhost:5173/auth/callback'
 
 export const SCOPES =
-  'streaming user-read-private user-read-email user-modify-playback-state user-read-currently-playing'
+  'streaming user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing'
 
 export const codeVerifierCookie = createCookie('code-verifier', {
   maxAge: 600, // 10 minutes

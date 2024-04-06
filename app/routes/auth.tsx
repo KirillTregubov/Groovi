@@ -1,5 +1,5 @@
 import { ActionFunctionArgs } from '@remix-run/node'
-import { AUTH_REDIRECT_URL, SCOPES, codeVerifierCookie } from './.server'
+import { AUTH_REDIRECT_URL, SCOPES, codeVerifierCookie } from '../lib/server'
 
 const generateRandomString = (length: number) => {
   const possible =

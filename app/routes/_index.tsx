@@ -1,6 +1,6 @@
 import { json, LoaderFunctionArgs, type MetaFunction } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import Player from '~/components/player'
+// import Player from '~/components/player'
 import { getToken } from '~/lib/auth.server'
 
 export const meta: MetaFunction = () => {
@@ -22,8 +22,16 @@ export default function Index() {
     <main className="p-4">
       <h1>Groovi</h1>
       {token ? (
-        <Player token={token} />
+        <div>
+          <h2>Token</h2>
+          <pre>{token}</pre>
+          <form method="get" action="/auth/logout">
+            <button onClick={() => console.log(token)}>Logout</button>
+          </form>
+        </div>
       ) : (
+        // <SpotiRequest />
+        // <Player token={token} />
         <form method="post" action="/auth">
           {/* <label>
           <input name="name" type="text" />
