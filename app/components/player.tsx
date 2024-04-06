@@ -6,9 +6,13 @@ export default function Player({ token }: { token: string }) {
   const [playerState, setPlayerState] = useState<WebPlaybackState | null>(null)
   // const [is_paused, setPaused] = useState(false)
   // const [is_active, setActive] = useState(false)
-  const [current_track, setTrack] = useState(null)
+  // const [current_track, setTrack] = useState(null)
 
   useEffect(() => {
+    if (!token) {
+      return
+    }
+
     if (!document.getElementById('spotify-player')) {
       const script = document.createElement('script')
       script.id = 'spotify-player'

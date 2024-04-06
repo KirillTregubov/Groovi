@@ -1,20 +1,20 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from '@remix-run/node'
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  TypedResponse,
+  json
+} from '@remix-run/node'
 import {
   Form,
   ShouldRevalidateFunctionArgs,
   useActionData,
-  // useFetcher,
   useLoaderData,
   useNavigation
 } from '@remix-run/react'
 import Search from '~/components/search'
 import { requireToken } from '~/lib/auth.server'
-import {
-  //getPlayer,
-  getQueue,
-  addToQueue,
-  searchForTracks
-} from '~/lib/data'
+import { getQueue, addToQueue, searchForTracks } from '~/lib/data'
+import type { TrackObject } from '~/lib/types'
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const token = await requireToken(request)
@@ -23,7 +23,14 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json(queue)
 }
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const action = async ({
+  request
+}: ActionFunctionArgs): Promise<
+  TypedResponse<{
+    ok: boolean
+    errors: { message?: string; song?: string; search?: string } | null
+  }>
+> => {
   if (request.method !== 'POST') {
     return json(
       { ok: false, errors: { message: 'Method not allowed' } },
@@ -97,14 +104,16 @@ export default function SpotiRequest() {
         </div>
         {actionData?.errors?.message && <div>{actionData?.errors.message}</div>}
         <button type="submit" name="_action" value="queue">
+          {navigation.formAction === '/test' && <div>Loading...</div>}
           Add to Queue
         </button>
       </Form>
       {/* <pre>{JSON.stringify(data.currently_playing, null, 2)}</pre> */}
       {/* <pre>{JSON.stringify(data.queue, null, 2)}</pre> */}
+      {/* TODO: queue doesn't update when playback updates */}
       <div>
         <h2>Queue</h2>
-        {data.queue.map((item: any, index: number) => (
+        {data.queue.map((item: TrackObject, index: number) => (
           <div key={`${item.id}-${index}`} className="p-2">
             <img
               src={item.album.images[0].url}

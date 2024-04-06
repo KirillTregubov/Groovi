@@ -1,14 +1,7 @@
-import { json, LoaderFunctionArgs, type MetaFunction } from '@remix-run/node'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 // import Player from '~/components/player'
 import { getToken } from '~/lib/auth.server'
-
-export const meta: MetaFunction = () => {
-  return [
-    { title: 'New Remix App' },
-    { name: 'description', content: 'Welcome to Remix!' }
-  ]
-}
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const token = await getToken(request)

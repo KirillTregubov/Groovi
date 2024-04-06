@@ -1,17 +1,7 @@
 import { useFetcher } from '@remix-run/react'
 import { useEffect, useState } from 'react'
 import clsx from 'clsx'
-
-type SearchResults = {
-  items: {
-    name: string
-    artists: { name: string }[]
-    album: { images: { url: string }[]; name: string }
-    uri: string
-  }[]
-  offset: number
-  total: number
-}
+import type { SearchResults } from '~/lib/types'
 
 export default function Search({
   inputName = undefined

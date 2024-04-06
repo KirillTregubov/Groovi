@@ -1,4 +1,4 @@
-import { LinksFunction } from '@remix-run/node'
+import { LinksFunction, MetaFunction } from '@remix-run/node'
 import {
   Links,
   Meta,
@@ -13,6 +13,13 @@ import stylesheet from '~/tailwind.css?url'
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet }
 ]
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: 'Groovi' },
+    { name: 'description', content: 'Greetings from Groovi!' }
+  ]
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
