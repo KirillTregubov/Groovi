@@ -12,8 +12,7 @@ export async function getPlayer({ token }: { token: Token }) {
     }
   })
   if (response.status === 204) {
-    // TODO: finalize this
-    return { message: 'No active device' }
+    return null
   }
   const data = await response.json()
   if ('error' in data) {
@@ -23,7 +22,7 @@ export async function getPlayer({ token }: { token: Token }) {
     }
     throw new Error(data.error.message)
   }
-  // todo: zod
+  // TODO: add zod
   return data as object
 }
 
@@ -60,19 +59,18 @@ export async function addToQueue({
   song_uri: string
   device_id?: string
 }) {
-  console.log(song_uri)
-  console.log(
-    JSON.stringify({
-      uri: song_uri,
-      device_id
-    })
-  )
+  const params = {
+    uri: song_uri
+  } as {
+    uri: string
+    device_id?: string
+  }
+  if (device_id) {
+    params['device_id'] = device_id
+  }
+
   const response = await fetch(
-    'https://api.spotify.com/v1/me/player/queue?' +
-      new URLSearchParams({
-        uri: song_uri
-        //   device_id
-      }),
+    'https://api.spotify.com/v1/me/player/queue?' + new URLSearchParams(params),
     {
       method: 'POST',
       headers: {
@@ -80,12 +78,10 @@ export async function addToQueue({
       }
     }
   )
-  console.log(response)
   if (response.status === 204) {
     return { ok: true, errors: null }
   }
   const data = await response.json()
-  // console.log('here', data)
   // 403, 429
   if (data.status === 401) {
     throw redirect('/auth/logout')

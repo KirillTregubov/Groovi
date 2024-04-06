@@ -61,9 +61,21 @@ export default function Search({
                 <img
                   src={item.album.images[0].url}
                   alt={`Cover for ${item.album.name}`}
-                  className="size-8 rounded-sm"
+                  className="size-12 rounded-sm"
                 />
-                {item.name} - {item.artists[0].name}
+                <div className="flex flex-col text-left">
+                  <div className="flex items-center gap-1.5 font-medium">
+                    {item.name}
+                    {item.explicit && (
+                      <span className="rounded-sm bg-gray-300 px-1.5 pb-px text-sm font-normal text-gray-950">
+                        E
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-sm text-gray-500">
+                    {item.artists[0].name}
+                  </span>
+                </div>
               </button>
             </li>
           ))}

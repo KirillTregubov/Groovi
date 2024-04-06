@@ -64,6 +64,7 @@ export const action = async ({
     }
 
     const queueStatus = await addToQueue({ token, song_uri: song })
+    // TODO: handle case when no active device
     if (queueStatus.ok === false) {
       return json({ ok: false, errors: queueStatus.errors }, { status: 400 })
     }
