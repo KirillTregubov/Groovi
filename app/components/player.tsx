@@ -37,12 +37,13 @@ export default function Player({ token }: { token: string }) {
       getOAuthToken: (cb) => {
         cb(token)
       },
-      volume: 0.5,
-      enableMediaSession: true
+      volume: 0.5
+      // enableMediaSession: true
     })
 
     player.addListener('ready', ({ device_id }) => {
       console.log('Ready with Device ID', device_id)
+      play()
     })
 
     player.addListener('not_ready', ({ device_id }) => {
@@ -76,11 +77,30 @@ export default function Player({ token }: { token: string }) {
       // player.getCurrentState().then((state) => {
       //   !state ? setActive(false) : setActive(true)
       // })
+      console.log('Player State Changed', state)
       setPlayerState(state)
     })
 
     player.connect()
     setPlayer(player)
+
+    async function play() {
+      const val = await player.getCurrentState().then((state) => {
+        if (!state) {
+          console.error(
+            'User is not playing music through the Web Playback SDK'
+          )
+          return
+        }
+
+        const current_track = state.track_window.current_track
+        const next_track = state.track_window.next_tracks[0]
+
+        console.log('Currently Playing', current_track)
+        console.log('Playing Next', next_track)
+      })
+      console.log(val)
+    }
 
     return () => {
       player.disconnect()

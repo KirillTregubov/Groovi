@@ -11,13 +11,16 @@ import {
 import stylesheet from '~/tailwind.css?url'
 
 export const links: LinksFunction = () => [
+  { rel: 'icon', href: '/favicon.ico' },
   { rel: 'stylesheet', href: stylesheet }
 ]
 
 export const meta: MetaFunction = () => {
   return [
     { title: 'Groovi' },
-    { name: 'description', content: 'Greetings from Groovi!' }
+    { name: 'description', content: 'Greetings from Groovi!' },
+    { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+    // { name: 'theme-color', content: '#000000' }
   ]
 }
 
@@ -26,7 +29,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>

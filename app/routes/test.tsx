@@ -9,9 +9,13 @@ import {
   ShouldRevalidateFunctionArgs,
   useActionData,
   useLoaderData,
-  useNavigation
+  useNavigation,
+  useRevalidator
 } from '@remix-run/react'
+import { useEffect } from 'react'
+// import Player from '~/components/player'
 import Search from '~/components/search'
+import useVisibility from '~/hooks/useVisibility'
 import { requireToken } from '~/lib/auth.server'
 import { getQueue, addToQueue, searchForTracks } from '~/lib/data'
 import type { TrackObject } from '~/lib/types'
@@ -64,7 +68,6 @@ export const action = async ({
     }
 
     const queueStatus = await addToQueue({ token, song_uri: song })
-    // TODO: handle case when no active device
     if (queueStatus.ok === false) {
       return json({ ok: false, errors: queueStatus.errors }, { status: 400 })
     }
@@ -90,10 +93,27 @@ export function shouldRevalidate({
 
 export default function SpotiRequest() {
   const navigation = useNavigation()
+  const revalidator = useRevalidator()
   const actionData = useActionData<typeof action>()
   const data = useLoaderData<typeof loader>()
+  const visibility = useVisibility()
 
-  console.log('actionData', actionData)
+  useEffect(() => {
+    if (!window) {
+      return
+    }
+
+    const interval = window.setInterval(() => {
+      if (!visibility) {
+        return
+      }
+      visibility && revalidator.revalidate()
+    }, 2000)
+
+    return () => {
+      window.clearInterval(interval)
+    }
+  })
 
   return (
     <main className="p-4">
@@ -104,11 +124,19 @@ export default function SpotiRequest() {
           {actionData?.errors?.song && <div>{actionData?.errors.song}</div>}
         </div>
         {actionData?.errors?.message && <div>{actionData?.errors.message}</div>}
-        <button type="submit" name="_action" value="queue">
+        <button
+          type="submit"
+          name="_action"
+          value="queue"
+          disabled={data.currently_playing === null}
+          title={data.currently_playing === null ? 'No active device' : ''}
+          className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-blue-500"
+        >
           {navigation.formAction === '/test' && <div>Loading...</div>}
           Add to Queue
         </button>
       </Form>
+      {/* <Player token={data.token} /> */}
       {/* <pre>{JSON.stringify(data.currently_playing, null, 2)}</pre> */}
       {/* <pre>{JSON.stringify(data.queue, null, 2)}</pre> */}
       {/* TODO: queue doesn't update when playback updates */}
