@@ -105,7 +105,7 @@ export default function Player({ token }: { token: string }) {
     return () => {
       player.disconnect()
     }
-  }, [ready])
+  }, [ready, token])
 
   return (
     <div>
